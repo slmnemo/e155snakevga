@@ -1,0 +1,2 @@
+# ignore modelsim generated files
+*.bak
