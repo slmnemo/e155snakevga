@@ -10,22 +10,19 @@
 // Written by Kaitlin Lucio (nlucio@hmc.edu)
 // Last nodified: Sept 11, 2023
 
-`timescale 10ns/1ns
-
 module counter_dynamic #(parameter dwidth) (
     input logic                         clk, reset, en,
-    input logic [dwidth:0]              d,
-    output logic                        out
+    input logic  [dwidth-1:0]           count_max,
+    output logic [dwidth-1:0]           count
 );
 
-logic [dwidth:0]    count, next_count;
+logic [dwidth-1:0]  next_count;
 logic               resetcounter;
 
-assign resetcounter = reset | divclk;
+assign resetcounter = reset | (count == count_max);
 
-flopenr #($clog2(div_val)) counter(.clk, .reset(resetcounter), .en, .d(count), .q(next_count));
+flopenr #(dwidth) counter(.clk, .reset(resetcounter), .en, .d(next_count), .q(count));
 
 assign next_count = count + 1;
-assign out = (d == (count-1));
 
 endmodule
