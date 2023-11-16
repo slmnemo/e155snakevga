@@ -20,6 +20,9 @@ logic       rowblock_clk, colblock_clk;
 logic [4:0] duration;
 logic [9:0] raddrvalid;
 
+typedef enum logic [2:0] {prep_next_line, prep_next_frame, fetch_next} statetypes; // states go here, have 8 states possible rn
+statetypes state, next_state;
+
 flopenr #(5) duration_flop(.clk, .reset, .en(updateoutput | startnextframe), .d(next_duration), .q(duration));
 
 // flop to delay row_counter turn-on by exactly one clock cycle
@@ -42,7 +45,7 @@ assign colblock_increment = (colvalid & (row == 10'd798));
 
 // Handle division of row and column inputs by block boundaries
 counterdiv_static #(19) rowblock_counterdiv(.clk, .reset(startnextframe), .en(rowvalid), .divclk(rowblock_clk));
-counterdiv_static #(20) colblock_counterdiv(.clk, .reset(startnextframe), .en(colblock_increment), .divclk(colblock_clk));
+counterdiv_static #(19) colblock_counterdiv(.clk, .reset(startnextframe), .en(colblock_increment), .divclk(colblock_clk));
 
 // calculate address offsets for 1k BMEM
 
