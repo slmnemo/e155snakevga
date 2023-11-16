@@ -10,7 +10,7 @@
 // Written by Kaitlin Lucio (nlucio@hmc.edu)
 // Last nodified: Sept 11, 2023
 
-module counterdiv_dyn #(parameter dwidth) (
+module counterdiv_dyn #(parameter dwidth=8) (
     input logic                 clk, reset, en,
     input logic  [dwidth-1:0]   count_max,
     output logic                divclk

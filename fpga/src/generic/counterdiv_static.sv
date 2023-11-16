@@ -10,7 +10,7 @@
 // Written by Kaitlin Lucio (nlucio@hmc.edu)
 // Last nodified: Sept 11, 2023
 
-module counterdiv_static #(parameter count_max) (
+module counterdiv_static #(parameter count_max=8) (
     input logic                 clk, reset, en,
     output logic                divclk
 );

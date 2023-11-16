@@ -19,7 +19,7 @@ logic           R_next, B_next, G_next, R_in, G_in, B_in;
 logic [4:0]     next_duration;
 logic [9:0]     row, col;
 
-vga_fsm         vgafsm(.clk, .reset, .state, .score, .col, .row, .R_next, .G_next, .B_next);
+vga_fsm         vgafsm(.clk, .reset, .state_in(state), .score, .col, .row, .R_next, .G_next, .B_next);
 
 flopenr #(3)    rgb_flop(.clk, .reset, .en(updateoutput), .d({R_next, B_next, G_next}), .q({R_in, G_in, B_in}));
 
