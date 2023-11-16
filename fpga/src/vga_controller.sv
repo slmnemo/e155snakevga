@@ -5,6 +5,7 @@ Also handles raddr and re logic
 
 TODO: handle initialization case (row and delay counter mismatch) and read and reset counter at max value
 
+TODO: fix issues related to resetting earlier than expected
 
 */
 
@@ -37,7 +38,7 @@ assign rowvalid = (row < 10'd640);
 
 // column counter enabled by row reset
 assign startnextframe = reset | ((col == 10'd524) & (row == 10'd799));
-counter_static #(vertical_scansize) col_counter(.clk, .reset(startnextframe), .en(rowdone), .count(col));
+counter_static #(vertical_scansize+1) col_counter(.clk, .reset(startnextframe), .en(rowdone), .count(col));
 
 // col internal signals
 assign colvalid = (col < 10'd480);
