@@ -7,7 +7,7 @@
 
 // `timescale 1ns/1ns  
 `default_nettype none
-`define numTestvectors 420000
+`define numTestvectors 420000*2
 `define WIDTH 28
 
 module vga_transmitter_testbench();
