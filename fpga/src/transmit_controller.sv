@@ -13,9 +13,9 @@ module transmit_controller (
 assign output_en = (row < 10'd640) & (col < 10'd480);
 
 
-assign HSync = ~((row > 10'd655) & (row < 10'd752));
+assign HSync = ((row > 10'd655) & (row < 10'd752));
 
 
-assign VSync = ~((col > 10'd489) & (col < 10'd492));
+assign VSync = ((col > 10'd489) & (col < 10'd492));
 
 endmodule

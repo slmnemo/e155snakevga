@@ -49,13 +49,13 @@ for i in range(loops):
                 rgb_expected = 0
             if (col < v_visiblepix+v_frontporch) or (col >= v_visiblepix+v_frontporch+v_synctime):
                 # If col is in valid  location, col is less than value of pix+frontporch or more than previous+synctime
-                VSync = 1
-            else:
                 VSync = 0
-            if (row < h_visiblepix+h_frontporch) or (row >= h_visiblepix+h_frontporch+h_synctime):
-                HSync = 1
             else:
+                VSync = 1
+            if (row < h_visiblepix+h_frontporch) or (row >= h_visiblepix+h_frontporch+h_synctime):
                 HSync = 0
+            else:
+                HSync = 1
             totaltests += 1
             testvectors += [f"{row:010b}_{col:010b}_{rgb:03b}___{VSync:01b}_{HSync:01b}_{rgb_expected:03b}\n"]
         
