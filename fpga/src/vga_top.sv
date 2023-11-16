@@ -25,6 +25,6 @@ flopenr #(3)    rgb_flop(.clk, .reset, .en(updateoutput), .d({R_next, B_next, G_
 
 vga_controller  vgacontroller(.clk, .reset, .next_duration, .updateoutput, .re, .row, .col, .raddr);
 
-vga_transmitter vgatransmitter(.R_in, .G_in, .B_in, .row, .col, .VSync, .HSync);
+vga_transmitter vgatransmitter(.R_in(1'b0), .G_in(1'b1), .B_in(1'b0), .row, .col, .R_out, .G_out, .B_out, .VSync, .HSync);
 
 endmodule

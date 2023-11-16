@@ -44,6 +44,10 @@ assign R_out = (state == white) | (state == red) | ((state == colbasedRGB) & col
 assign G_out = (state == white) | (state == green) | ((state == colbasedRGB) & colRGB[1]) | ((state == rowbasedRGB) & rowRGB[1]);
 assign B_out = (state == white) | ((state == colbasedRGB) & colRGB[0]) | ((state == rowbasedRGB) & rowRGB[0]);
 
+// assign R_out = 0;
+// assign G_out = 1;
+// assign B_out = 0;
+
 assign duration = ((state == col20align) | (state == row20align)) ? 5'd20 : 5'd0;
 
 endmodule

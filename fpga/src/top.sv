@@ -9,7 +9,7 @@ module top (
 	output logic clk2
 );
 
-logic		hsclk, core_clk, reset, clk3;
+logic		hsclk, core_clk, reset;
 logic       re;
 logic [7:0] command, databyte1, databyte2;
 logic [9:0] raddr, score, new_score;
@@ -19,11 +19,7 @@ assign reset = ~resetB;
 HSOSC #(.CLKHF_DIV(2'b00))
 	hf_osc(.CLKHFPU(1'b1), .CLKHFEN(1'b1), .CLKHF(hsclk));
 
-assign clk = hsclk;
-// sysclk_pll clk_pll(.ref_clk_i(hsclk), .rst_n_i(reset), .outcore_o(core_clk), .outglobal_o(clk));
-
-flop #(1) memeclk(.clk, .reset, .d(clk3), .q(clk2));
-assign clk3 = ~clk2;
+sysclk_pll clk_pll(.ref_clk_i(hsclk), .rst_n_i(resetB), .outcore_o(core_clk), .outglobal_o(clk));
 
 spi spi(.sdi, .sck, .cs, .command, .databyte1, .databyte2);
 
