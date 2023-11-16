@@ -1,2 +1,7 @@
 # ignore modelsim generated files
 *.bak
+
+# ignore KiCAD generated files
+\#auto_saved_files#
+*-backups
+*.lck
