@@ -6,8 +6,6 @@
 // Written by Kaitlin Lucio (nlucio@hmc.edu)
 // Last nodified: Sept 11, 2023
 
-`timescale 10ns/1ns
-
 module flopenr #(parameter WIDTH=32) (
     input logic                 clk, reset, en,
     input logic [WIDTH-1:0]     d,

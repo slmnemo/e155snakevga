@@ -10,19 +10,20 @@
 // Written by Kaitlin Lucio (nlucio@hmc.edu)
 // Last nodified: Sept 11, 2023
 
-module counter_dynamic #(parameter dwidth) (
-    input logic                         clk, reset, en,
-    input logic  [dwidth-1:0]           count_max,
-    output logic [dwidth-1:0]           count
+module counterdiv_dyn #(parameter dwidth) (
+    input logic                 clk, reset, en,
+    input logic  [dwidth-1:0]   count_max,
+    output logic                divclk
 );
 
-logic [dwidth-1:0]  next_count;
+logic [dwidth-1:0]  count, next_count;
 logic               resetcounter;
 
-assign resetcounter = reset | (count == count_max);
+assign next_count = count + 1;
+assign divclk = (count == (count_max)) | reset;
+assign resetcounter = reset | divclk;
 
 flopenr #(dwidth) counter(.clk, .reset(resetcounter), .en, .d(next_count), .q(count));
 
-assign next_count = count + 1;
 
 endmodule
