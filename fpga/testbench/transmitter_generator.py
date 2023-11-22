@@ -16,7 +16,7 @@ import random
 outputdir = "./testvectors/"
 filename = "vga_transmitter.tv"
 
-loops = 1
+loops = 2
 colsize = 525
 rowsize = 800
 h_visiblepix = 640
