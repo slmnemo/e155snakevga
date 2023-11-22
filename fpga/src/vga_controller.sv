@@ -8,7 +8,7 @@ TODO: handle initialization case (row and delay counter mismatch) and read and r
 
 */
 
-module vga_controller #(parameter horizontal_scansize=800-1, parameter vertical_scansize=525-1) (
+module vga_controller #(parameter horizontal_scansize=800-1, parameter vertical_scansize=525) (
     input logic         clk, reset,
     input logic [4:0]   next_duration,
     output logic        updateoutput, re,
