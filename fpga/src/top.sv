@@ -5,12 +5,14 @@ Top module for full graphics card
 module top (
     input logic cs, sck, sdi, resetB,
     input logic [2:0] state_in, // for testing that we can change state and duration stuff
-    output logic R_out, G_out, B_out, VSync, HSync,
-	output logic clk2
+    output logic R_out, G_out, B_out, VSyncB, HSyncB,
+	output logic clk2,
+	output logic [2:0] LED
 );
 
-logic		hsclk, core_clk, reset;
+logic		hsclk, core_clk, reset, VSync, HSync;
 logic       re;
+logic [2:0] LEDpar;
 logic [7:0] command, databyte1, databyte2;
 logic [9:0] raddr, score, new_score;
 
@@ -27,5 +29,10 @@ spi spi(.sdi, .sck, .cs, .command, .databyte1, .databyte2);
 
 vga_top vga(.clk, .reset, .state({13'b0, state_in}), .score(10'b0), .R_out, .G_out, .B_out, .VSync, .HSync, .re, .raddr);
 
+assign VSyncB = ~VSync;
+assign HSyncB = ~HSync;
+
+assign LEDpar = state_in;
+assign LED = state_in;
 
 endmodule
