@@ -23,14 +23,14 @@ assign rowRGB = row[2:0];
 
 always_comb
     case(state_in)
-        3'd0: nextState = black;
-        3'd1: nextState = white;
-        3'd2: nextState = colbasedRGB;
-        3'd3: nextState = rowbasedRGB;
-        3'd4: nextState = col20align;
-        3'd5: nextState = row20align;
-        3'd6: nextState = green;
-        3'd7: nextState = red;
+        16'd0: nextState = black;
+        16'd1: nextState = white;
+        16'd2: nextState = colbasedRGB;
+        16'd3: nextState = rowbasedRGB;
+        16'd4: nextState = col20align;
+        16'd5: nextState = row20align;
+        16'd6: nextState = green;
+        16'd7: nextState = red;
         default: nextState = black;
     endcase
 
@@ -40,9 +40,9 @@ always_ff @(posedge clk)
     else
         state <= nextState;
 
-assign R_out = (state == white) | (state == red) | ((state == colbasedRGB) & colRGB[2]) | ((state == rowbasedRGB) & rowRGB[2]);
-assign G_out = (state == white) | (state == green) | ((state == colbasedRGB) & colRGB[1]) | ((state == rowbasedRGB) & rowRGB[1]);
-assign B_out = (state == white) | ((state == colbasedRGB) & colRGB[0]) | ((state == rowbasedRGB) & rowRGB[0]);
+assign R_next = (state == white) | (state == red) | ((state == colbasedRGB) & colRGB[2]) | ((state == rowbasedRGB) & rowRGB[2]);
+assign G_next = (state == white) | (state == green) | ((state == colbasedRGB) & colRGB[1]) | ((state == rowbasedRGB) & rowRGB[1]);
+assign B_next = (state == white) | ((state == colbasedRGB) & colRGB[0]) | ((state == rowbasedRGB) & rowRGB[0]);
 
 // assign R_out = 0;
 // assign G_out = 1;
