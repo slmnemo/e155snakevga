@@ -3,7 +3,7 @@ Define file for VGA timings
 
 
 */
-`define RISETIMECORRECTION 3
+`define RISETIMECORRECTION 0
 
 `define HACTIVE 640
 `define HFRONTPORCH 16
