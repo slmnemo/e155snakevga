@@ -20,7 +20,9 @@ HSOSC #(.CLKHF_DIV(2'b00))
 
 sysclk_pll clk_pll(.ref_clk_i(hsclk), .rst_n_i(resetB), .outcore_o(core_clk), .outglobal_o(clk));
 
-spi spi(.sdi, .sck, .cs, .command, .databyte1, .databyte2);
+spi spi_inst(.sdi, .sck, .cs, .command, .databyte1, .databyte2);
+
+spi_decoder spi_dec_inst(.clk, .reset, .cs, .we);
 
 dpram ebram_casc(.clk, .raddr, .waddr, .re, .we, .wdata, .rdata);
 

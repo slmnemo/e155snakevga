@@ -14,20 +14,25 @@ module spi_decoder(input logic clk, reset,
     statetype state, nextstate;
 
     // next state register
-    always_ff (@posedge clk)
-        if (reset) state <= S_IDLE;
-        else state <= nextstate;
+    always_ff @(posedge clk) begin
+		state <= nextstate;
+	end
 
     // next state logic
-    always_comb
+    always_comb begin
         case(state) 
-            S_IDLE: if (cs) nextstate = S_RECEIVING;
-                    else nextstate = S_IDLE;
-            S_RECEIVING: if (~cs) nextstate = S_DONE;
-                        else nextstate = S_RECEIVING;
+            S_IDLE:      begin
+                         if (cs) nextstate = S_RECEIVING;
+                         else nextstate = S_IDLE;
+                         end
+            S_RECEIVING: begin 
+                         if (cs) nextstate = S_RECEIVING;
+                         else nextstate = S_DONE;
+                         end
             S_DONE: nextstate = S_IDLE;
             default: nextstate = S_IDLE;
         endcase
+    end
 
     // output logic
     assign we = (state == S_DONE);
