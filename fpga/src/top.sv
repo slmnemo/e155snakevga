@@ -9,8 +9,8 @@ module top (
 	output logic [2:0] LED
 );
 
-logic		hsclk, core_clk, reset, VSync, HSync;
-logic       re;
+logic		hsclk, core_clk, clk, reset, VSync, HSync;
+logic       re, we;
 logic [2:0] LEDpar;
 logic [7:0] command, databyte1, databyte2;
 logic [9:0] raddr, score, new_score;
@@ -22,7 +22,9 @@ HSOSC #(.CLKHF_DIV(2'b00))
 
 sysclk_pll clk_pll(.ref_clk_i(hsclk), .rst_n_i(resetB), .outcore_o(core_clk), .outglobal_o(clk));
 
-spi spi(.sdi, .sck, .cs, .command, .databyte1, .databyte2);
+spi spi_inst(.sdi, .sck, .cs, .command, .databyte1, .databyte2);
+
+spi_decoder spi_dec_inst(.clk, .reset, .cs, .we);
 
 // TODO: Add memory interface and score handling. Maybe controller for stuff like score.
 
@@ -31,6 +33,5 @@ vga_top vga(.clk, .reset, .state({13'b0, state_in}), .score(10'b0), .R_out, .G_o
 assign VSyncB = ~VSync;
 assign HSyncB = ~HSync;
 
-flop #(3) LEDflop(.clk, .reset, .d(state_in), .q(LED));
 
 endmodule
