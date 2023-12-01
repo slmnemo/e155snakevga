@@ -7,7 +7,7 @@ TODO: Implement above version. Current version takes a 4 bit number from a count
 module vga_fsm (
     input logic         clk, reset,
     input logic  [9:0]  score, col, row,
-    input logic  [15:0] state_in,
+    input logic  [7:0] state_in,
     output logic        R_next, G_next, B_next, re,
     output logic [4:0]  next_duration
 );
