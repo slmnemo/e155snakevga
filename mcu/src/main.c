@@ -44,7 +44,7 @@ int main(void) {
 
   while(1)
   {
-    write_pixel(30, 50, RED);
+    write_pixel(0b01010101, 0b01010101, RED);
   }
 
 

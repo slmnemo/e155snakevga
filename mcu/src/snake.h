@@ -3,46 +3,48 @@
 
 #include "STM32L432KC.h"
 
-#define NUM_ROWS 22
+#define NUM_ROWS 20
 #define NUM_COLS 30
+#define MAX_NUM_TAILS = NUM_ROWS*NUM_COLS
 
 typedef enum color {
-    RED,
-    GREEN,
-    BLUE,
-    WHITE,
-    BLACK
+    // using R G B encoding for each color
+    BLACK  = 0b000,
+    BLUE   = 0b001,
+    GREEN  = 0b010,
+    CYAN   = 0b011,
+    RED    = 0b100,
+    PURPLE = 0b101,
+    YELLOW = 0b110,
+    WHITE  = 0b111
 } color_t;
 
+typedef enum direction {
+    STOP = 0,
+    UP, 
+    DOWN,
+    RIGHT,
+    LEFT
+} direction_t;
+
 typedef enum spi_command {
-    CLEAR             = 0x00,
-    WRITE_WHITE       = 0x01,
-    WRITE_RED         = 0x02,
-    WRITE_GREEN       = 0x03,
-    WRITE_BLUE        = 0x04,
-    UPDATE_SCORE      = 0x05,
-    UPDATE_GAME_STATE = 0x06
+    WRITE_COLOR       = 0x80,
+    UPDATE_SCORE      = 0x10,
+    UPDATE_GAME_STATE = 0x20
 } spi_command_t;
-
-typedef struct game_square {
-    color_t pixel_color;
-    int snake_head;
-    int snake_tail;
-    int snake_body;
-    int has_apple;
-} game_square_t;
-
-typedef struct game_board {
-    game_square_t board[NUM_ROWS][NUM_COLS];
-    uint32_t score;
-} game_board_t;
 
 
 void write_pixel(uint8_t pixel_x, uint8_t pixel_y, color_t color);
 
-void clear_pixel(uint8_t pixel_x, uint8_t pixel_y);
-
 void write_start_screen();
+
+// game logic functions
+void init_game();
+void draw(); // for terminal debugging
+void place_fruit();
+void input(); // for keyboard debugging
+void game_logic();
+
 
 #endif // SNAKE_H
 
