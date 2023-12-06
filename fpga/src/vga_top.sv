@@ -28,6 +28,8 @@ vga_controller  vgacontroller(.clk, .reset, .next_duration, .updateoutput, .re, 
 
 flopenr #(3)    rgb_flop(.clk, .reset, .en(updateoutput), .d({R_next, G_next, B_next}), .q({R_in, G_in, B_in}));
 
+// TODO: Use mux and score to calculate what to display for score and mask it with RGB values
+
 vga_transmitter vgatransmitter(.R_in, .G_in, .B_in, .row, .col, .R_out, .G_out, .B_out, .VSync, .HSync);
 
 endmodule

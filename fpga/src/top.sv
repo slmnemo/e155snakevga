@@ -10,7 +10,7 @@ module top (
 logic		hsclk, core_clk, reset, VSync, HSync;
 logic       re, we, spi_done;
 logic [7:0] command, databyte1, databyte2, wdata, rdata, state_in;
-logic [9:0] raddr, waddr, score, new_score;
+logic [9:0] raddr, waddr, score;
 
 assign reset = ~resetB;
 
@@ -23,9 +23,11 @@ spi spi_inst(.sdi, .sck, .cs, .command, .databyte1, .databyte2);
 
 spi_decoder spi_dec_inst(.clk, .reset, .cs, .spi_done);
 
-dpram ebram_casc(.clk, .raddr, .waddr, .re, .we, .wdata, .rdata(state_in));
+command_decoder command_dec_inst(.command, .databyte1, .databyte2, .spi_done, .we, .waddr, .wdata, .score);
 
-vga_top vga(.clk, .reset, .state(state_in), .score(10'b0), .R_out, .G_out, .B_out, .VSync, .HSync, .re, .raddr);
+dpram ebram_casc(.clk, .raddr, .waddr, .re, .we, .wdata(.command[]), .rdata(state_in));
+
+vga_top vga(.clk, .reset, .state(state_in), .score, .R_out, .G_out, .B_out, .VSync, .HSync, .re, .raddr);
 
 assign VSyncB = ~VSync;
 assign HSyncB = ~HSync;

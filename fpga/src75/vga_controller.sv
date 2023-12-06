@@ -23,9 +23,6 @@ logic       rowblock_clk, colblock_clk;
 logic [4:0] duration;
 logic [9:0] raddrvalid;
 
-typedef enum logic [2:0] {prep_next_line, prep_next_frame, fetch_next} statetypes; // states go here, have 8 states possible rn
-statetypes state, next_state;
-
 flopenr #(5) duration_flop(.clk, .reset, .en(updateoutput | startnextframe), .d(next_duration), .q(duration));
 
 // flop to delay row_counter turn-on by exactly one clock cycle
@@ -47,14 +44,32 @@ assign colvalid = (col < `VACTIVE);
 assign colblock_increment = (colvalid & (`HFULLSCAN-2)); // account for pipeline delay when calculating next readaddr
 
 // Handle division of row and column inputs by block boundaries
-counterdiv_static #(19) rowblock_counterdiv(.clk, .reset(startnextframe), .en(rowvalid), .divclk(rowblock_clk));
-counterdiv_static #(19) colblock_counterdiv(.clk, .reset(startnextframe), .en(colblock_increment), .divclk(colblock_clk));
+counterdiv_static #(19) rowblock_counterdiv(.clk, .reset(startnextframe), .en(rowvalid), .divclk(rowblock_trig));
+counterdiv_static #(19) colblock_counterdiv(.clk, .reset(startnextframe), .en(colblock_increment), .divclk(colblock_trig));
 
 // calculate address offsets for 1k BMEM
 
-assign rowblock_update = rowblock_clk | (row == 0); // no need for colblock_update at 0 since we only need to fetch row ahead of time
-counter_static #(32) addrrowoffset_counter(.clk, .reset(~rowvalid | reset), .en(rowblock_update), .count(raddr[4:0]));
-counter_static #(24) addrcoloffset_counter(.clk, .reset(~colvalid | reset), .en(colblock_clk), .count(raddr[9:5]));
+typedef enum logic [1:0] {idle, inc_raddr} vstates; // states go here, have 8 states possible rn
+vstates vstate, next_vstate;
+
+typedef enum logic [1:0] {idle, incr_raddr, send_raddr, get_rdata} hstates;
+hstates hstate, next_hstate;
+
+always_comb begin
+    case(hstate)
+        idle: if (rowblock_trig == 1'b1) 
+    endcase
+end
+
+always_comb begin
+    case(vstate)
+
+    endcase
+end
+
+// assign rowblock_update = rowblock_clk | (row == 0); // no need for colblock_update at 0 since we only need to fetch row ahead of time
+// counter_static #(32) addrrowoffset_counter(.clk, .reset(~rowvalid | reset), .en(rowblock_update), .count(raddr[4:0]));
+// counter_static #(24) addrcoloffset_counter(.clk, .reset(~colvalid | reset), .en(colblock_clk), .count(raddr[9:5]));
 
 // count duration down from next duration
 assign duration_en = (colvalid & rowvalid);

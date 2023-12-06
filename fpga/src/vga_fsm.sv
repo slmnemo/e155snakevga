@@ -12,32 +12,34 @@ module vga_fsm (
     output logic [4:0]  next_duration
 );
 
-typedef enum logic [3:0] {black20, blue20, green20, cyan20, red20, purple20, yellow20, white20} statetypes;
+logic [2:0] state;
 
-statetypes state, nextState;
+// typedef enum logic [3:0] {black, blue, green, cyan, red, purple, yellow, white} statetypes;
 
-always_comb
-    case(state_in)
-        8'd0: nextState = black;
-        8'd1: nextState = blue;
-        8'd2: nextState = green;
-        8'd3: nextState = cyan;
-        8'd4: nextState = red;
-        8'd5: nextState = purple;
-        8'd6: nextState = yellow;
-        8'd7: nextState = white;
-        default: nextState = black;
-    endcase
+// statetypes state, nextState;
+
+// always_comb
+//     case(state_in)
+//         8'd0: nextState = black;
+//         8'd1: nextState = blue;
+//         8'd2: nextState = green;
+//         8'd3: nextState = cyan;
+//         8'd4: nextState = red;
+//         8'd5: nextState = purple;
+//         8'd6: nextState = yellow;
+//         8'd7: nextState = white;
+//         default: nextState = black;
+//     endcase
 
 always_ff @(posedge clk)
     if (reset)
-        state <= black;
+        state <= 3'b000;
     else
-        state <= nextState;
+        state <= state_in;
 
-assign R_next = (state == white) | (state == red) | ((state == colbasedRGB) & colRGB[2]) | ((state == rowbasedRGB) & rowRGB[2]) | ((state == row20align) & rowRGB[2]) | ((state == col20align) & colRGB[2]);
-assign G_next = (state == white) | (state == green) | ((state == colbasedRGB) & colRGB[1]) | ((state == rowbasedRGB) & rowRGB[1]) | ((state == row20align) & rowRGB[1]) | ((state == col20align) & colRGB[1]);
-assign B_next = (state == white) | ((state == colbasedRGB) & colRGB[0]) | ((state == rowbasedRGB) & rowRGB[0]) | ((state == row20align) & rowRGB[0]) | ((state == col20align) & colRGB[0]);
+assign R_next = state[2];
+assign G_next = state[1];
+assign B_next = state[0];
 
 assign duration = 5'd19;
 
