@@ -21,7 +21,7 @@ logic       row_en, rowdone, rowvalid, colvalid, colblock_increment, startnextfr
 logic       rowblock_trig, colblock_trig;
 logic [4:0] next_duration, duration;
 logic [9:0] raddrvalid;
-logic [4`:0] rowmod20, colmod20;
+logic [4:0] rowmod20, colmod20;
 
 flopenr #(5) duration_flop(.clk, .reset, .en(updateoutput | startnextframe), .d(next_duration), .q(duration));
 
@@ -42,7 +42,7 @@ counter_static #(`VFULLSCAN) col_counter(.clk, .reset(startnextframe), .en(rowdo
 logic       incr_hblock, incr_cblock;
 logic [4:0] next_hblock, hblock, next_vblock, vblock;
 
-typedef enum logic [1:0] {V_IDLE, V_ADRINC, V_WAIT_FOR_DONE} vstates; 
+typedef enum logic [1:0] {V_IDLE=2'b00, V_ADRINC=2'b01, V_WAIT_FOR_DONE=2'b10} vstates; 
 vstates vstate, next_vstate;
 
 typedef enum logic [1:0] {H_IDLE, H_ADRINC, H_READ, H_UPDATE} hstates;
