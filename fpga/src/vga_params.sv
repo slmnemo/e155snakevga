@@ -22,12 +22,12 @@ Define file for VGA timings, fetch timings, and
 
 // Offsets for number positions
 
-`define ONES_X_OFFSET 640
-`define TENS_X_OFFSET 620
-`define HUNS_X_OFFSET 600
+`define ONES_X_OFFSET 639
+`define TENS_X_OFFSET 619
+`define HUNS_X_OFFSET 599
 
-`define ONES_Y_OFFSET 480
-`define TENS_Y_OFFSET 480
-`define HUNS_Y_OFFSET 480
+`define ONES_Y_OFFSET 479
+`define TENS_Y_OFFSET 479
+`define HUNS_Y_OFFSET 479
 
 
