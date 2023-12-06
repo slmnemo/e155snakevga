@@ -1,5 +1,5 @@
 /*
-Define file for VGA timings
+Define file for VGA timings, fetch timings, and 
 
 
 */
@@ -16,3 +16,18 @@ Define file for VGA timings
 `define VSYNCPULSE 2
 `define VBACKPORCH 32
 `define VFULLSCAN (`VACTIVE+`VFRONTPORCH+`VSYNCPULSE+`VBACKPORCH)
+
+`define HFETCHNEXTLINE 20
+`define HFETCH `HFULLSCAN - `HFETCHNEXTLINE - 1
+
+// Offsets for number positions
+
+`define ONES_X_OFFSET 640
+`define TENS_X_OFFSET 620
+`define HUNS_X_OFFSET 600
+
+`define ONES_Y_OFFSET 480
+`define TENS_Y_OFFSET 480
+`define HUNS_Y_OFFSET 480
+
+

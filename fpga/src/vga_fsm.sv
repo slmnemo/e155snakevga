@@ -41,7 +41,7 @@ assign R_next = state[2];
 assign G_next = state[1];
 assign B_next = state[0];
 
-assign duration = 5'd19;
+assign duration = 5'd0;
 
 endmodule
 

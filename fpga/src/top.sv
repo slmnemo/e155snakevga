@@ -4,11 +4,11 @@ Top module for full graphics card
 */
 module top (
     input logic cs, sck, sdi, resetB,
-    output logic R_out, G_out, B_out, VSyncB, HSyncB
+    output logic R_out, G_out, B_out, VSyncB, HSyncB, re
 );
 
 logic		hsclk, core_clk, reset, VSync, HSync;
-logic       re, we, spi_done;
+logic       re, we, spi_done, cmd_received;
 logic [7:0] command, databyte1, databyte2, command_rx, databyte1_rx, databyte2_rx;
 logic [7:0] wdata, rdata, state_in;
 logic [9:0] raddr, waddr, score;
@@ -24,15 +24,15 @@ spi spi_inst(.sdi, .sck, .cs, .command_rx, .databyte1_rx, .databyte2_rx);
 
 spi_decoder spi_dec_inst(.clk, .reset, .cs, .spi_done);
 
-flopenr #(24) spi_data_flop(.clk, .reset(clrcmd), .en(spi_done), 
+flopenr #(24) spi_data_flop(.clk, .reset(cmd_received), .en(spi_done), 
     .d({command_rx, databyte1_rx, databyte2_rx}), 
     .q({command, databyte1, databyte2}));
 
-command_decoder command_dec_inst(.clk, .reset, .command, .databyte1, .databyte2, .spi_done, .clrcmd, .we, .waddr, .wdata, .score);
+command_decoder command_dec_inst(.clk, .reset, .command, .databyte1, .databyte2, .spi_done, .cmd_received, .we, .waddr, .wdata, .score);
 
 dpram ebram_casc(.clk, .raddr, .waddr, .re, .we, .wdata, .rdata(state_in));
 
-vga_top vga(.clk, .reset, .state_in({command_rx}), .score, .R_out, .G_out, .B_out, .VSync, .HSync, .re, .raddr);
+vga_top vga(.clk, .reset, .state_in, .score, .R_out, .G_out, .B_out, .VSync, .HSync, .re, .raddr);
 
 assign VSyncB = ~VSync;
 assign HSyncB = ~HSync;

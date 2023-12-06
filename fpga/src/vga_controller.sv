@@ -38,6 +38,16 @@ assign rowvalid = (row < `HACTIVE);
 // column counter enabled by row reset
 counter_static #(`VFULLSCAN) col_counter(.clk, .reset(startnextframe), .en(rowdone), .count(col));
 
+// Handle division of row and column inputs by block boundaries
+counter_static #(19) rowblock_counter(.clk, .reset(startnextframe), .en(rowvalid), .count(rowmod20));
+counter_static #(20) colblock_counter(.clk, .reset(startnextframe | colblock_trig), .en(colblock_increment), .count(colmod20));
+
+// Precalculating signals for fsm to calculate read address
+assign in_hporch = ~rowvalid;
+assign in_vporch = ~colvalid;
+assign colblock_trig = (colmod20 == 5'd19) & in_hporch;
+assign rowblock_trig = (rowmod20 == 5'd19) & rowvalid & colvalid;
+
 // Logic and states for vertical and horizontal address fsms
 logic       incr_hblock, incr_cblock;
 logic [4:0] next_hblock, hblock, next_vblock, vblock;
@@ -77,16 +87,6 @@ assign colvalid = (col < `VACTIVE);
 assign colblock_increment = (colvalid & rowdone & (vstate != V_WAIT_FOR_DONE)); // account for pipeline delay when calculating next readaddr
 assign startnextframe = reset | ((col == `VFULLSCAN-1) & rowdone);
 
-// Handle division of row and column inputs by block boundaries
-counter_static #(19) rowblock_counter(.clk, .reset(startnextframe), .en(rowvalid), .count(rowmod20));
-counter_static #(20) colblock_counter(.clk, .reset(startnextframe | colblock_trig), .en(colblock_increment), .count(colmod20));
-
-// Precalculating signals for fsm to calculate read address
-assign in_hporch = ~rowvalid;
-assign in_vporch = ~colvalid;
-assign colblock_trig = (colmod20 == 5'd19) & in_hporch;
-assign rowblock_trig = (rowmod20 == 5'd19) & rowvalid & colvalid;
-
 // Flop to do state logic
 always_ff @(posedge clk) begin
     if (reset) begin
@@ -109,8 +109,8 @@ assign next_hblock = hblock + 5'b1;
 assign next_vblock = vblock + 5'b1;
 
 assign raddr = {hblock, vblock};
-assign re = (hstate == H_READ) | in_vporch | in_hporch;
-assign update_state = (hstate == H_UPDATE);
+assign re = (hstate == H_READ) | (row == `HFETCH);
+assign update_state = (hstate == H_UPDATE) | (row == `HFETCH+1);
 
 // assign rowblock_update = rowblock_clk | (row == 0); // no need for colblock_update at 0 since we only need to fetch row ahead of time
 // counter_static #(32) addrrowoffset_counter(.clk, .reset(~rowvalid | reset), .en(rowblock_update), .count(raddr[4:0]));
