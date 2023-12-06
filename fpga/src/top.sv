@@ -23,11 +23,11 @@ spi spi_inst(.sdi, .sck, .cs, .command, .databyte1, .databyte2);
 
 spi_decoder spi_dec_inst(.clk, .reset, .cs, .spi_done);
 
-command_decoder command_dec_inst(.command, .databyte1, .databyte2, .spi_done, .we, .waddr, .wdata, .score);
+command_decoder command_dec_inst(.clk, .reset, .command, .databyte1, .databyte2, .spi_done, .we, .waddr, .wdata, .score);
 
-dpram ebram_casc(.clk, .raddr, .waddr, .re, .we, .wdata(.command[]), .rdata(state_in));
+dpram ebram_casc(.clk, .raddr, .waddr, .re, .we, .wdata, .rdata(state_in));
 
-vga_top vga(.clk, .reset, .state(state_in), .score, .R_out, .G_out, .B_out, .VSync, .HSync, .re, .raddr);
+vga_top vga(.clk, .reset, .state_in, .score, .R_out, .G_out, .B_out, .VSync, .HSync, .re, .raddr);
 
 assign VSyncB = ~VSync;
 assign HSyncB = ~HSync;

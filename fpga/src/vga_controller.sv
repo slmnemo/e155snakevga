@@ -13,16 +13,15 @@ TODO: fix issues related to resetting earlier than expected
 
 module vga_controller (
     input logic         clk, reset,
-    input logic [4:0]   next_duration,
-    output logic        updateoutput, re,
+    output logic        updateoutput, update_state, re,
     output logic [9:0]  row, col, raddr
 );
 
 logic       row_en, rowdone, rowvalid, colvalid, colblock_increment, startnextframe, duration_en, updateoutputvalid, delay_row;
 logic       rowblock_trig, colblock_trig;
-logic [4:0] duration;
+logic [4:0] next_duration, duration;
 logic [9:0] raddrvalid;
-logic [5:0] rowmod20, colmod20;
+logic [4`:0] rowmod20, colmod20;
 
 flopenr #(5) duration_flop(.clk, .reset, .en(updateoutput | startnextframe), .d(next_duration), .q(duration));
 
@@ -111,12 +110,17 @@ assign next_vblock = vblock + 5'b1;
 
 assign raddr = {hblock, vblock};
 assign re = (hstate == H_READ) | in_vporch | in_hporch;
+assign update_state = (hstate == H_UPDATE);
 
 // assign rowblock_update = rowblock_clk | (row == 0); // no need for colblock_update at 0 since we only need to fetch row ahead of time
 // counter_static #(32) addrrowoffset_counter(.clk, .reset(~rowvalid | reset), .en(rowblock_update), .count(raddr[4:0]));
 // counter_static #(24) addrcoloffset_counter(.clk, .reset(~colvalid | reset), .en(colblock_clk), .count(raddr[9:5]));
 
 // count duration using next duration to create clear boundaries on colors
+
+// Hardcode next duration to 20
+assign next_duration = 5'd19;
+
 assign duration_en = (colvalid & rowvalid);
 assign duration_reset = ~duration_en | reset;
 
