@@ -4,8 +4,8 @@ author: Diego Herrera Vicioso dherreravicioso@hmc.edu
 
 Module to take in a 3 byte sequence over SPI:
 command (1 byte)
-databyte1 (1 byte)
-databyte2 (1 byte)
+databyte1_rx (1 byte)
+databyte2_rx (1 byte)
 
 This module expects one 3 byte transaction when CS is high. 
 No transmission is required for this application, only receive.
@@ -16,11 +16,11 @@ CPOL = 0, CPHA = 0
 module spi(input  logic sdi,
            input  logic sck,
            input  logic cs,
-           output logic [7:0] command, databyte1, databyte2);
+           output logic [7:0] command_rx, databyte1_rx, databyte2_rx);
 
     // shift register for receiving SPI data
     always_ff @(posedge sck)
-        if (cs) {command, databyte1, databyte2} = {command[6:0], databyte1, databyte2, sdi};
+        if (cs) {command_rx, databyte1_rx, databyte2_rx} = {command_rx[6:0], databyte1_rx, databyte2_rx, sdi};
     
 endmodule
 
@@ -30,14 +30,14 @@ endmodule
 module spi_tb();
     logic sck, clk, sdi, cs;
 
-    logic [7:0] command, command_exp;
-    logic [7:0] databyte1, databyte1_exp;
-    logic [7:0] databyte2, databyte2_exp;
+    logic [7:0] command_rx, command_exp;
+    logic [7:0] databyte1_rx, databyte1_exp;
+    logic [7:0] databyte2_rx, databyte2_exp;
 
     // variable to count cycles
     logic [16:0] i;
 
-    spi dut(sdi, sck, cs, command, databyte1, databyte2);
+    spi dut(sdi, sck, cs, command_rx, databyte1_rx, databyte2_rx);
 
     initial begin
         // arbitrary values to send over SPI
@@ -71,7 +71,7 @@ module spi_tb();
         if (i == 24) begin
             cs = 0;
             // end the tb
-            if (command == command_exp && databyte1 == databyte1_exp && databyte2 == databyte2_exp)
+            if (command_rx == command_exp && databyte1_rx == databyte1_exp && databyte2_rx == databyte2_exp)
                 $display("Testbench ran successfully");
             else $display("Error: check waveforms");
             $stop();

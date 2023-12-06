@@ -119,7 +119,7 @@ assign update_state = (hstate == H_UPDATE);
 // count duration using next duration to create clear boundaries on colors
 
 // Hardcode next duration to 20
-assign next_duration = 5'd19;
+assign next_duration = 5'd0;
 
 assign duration_en = (colvalid & rowvalid);
 assign duration_reset = ~duration_en | reset;

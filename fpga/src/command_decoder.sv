@@ -7,7 +7,7 @@ module command_decoder (
     input logic         clk, reset,
     input logic         spi_done,
     input logic [7:0]   command, databyte1, databyte2,
-    output logic        we,
+    output logic        we, clrcmd,
     output logic [7:0]  wdata,
     output logic [9:0]  waddr, score
 );
@@ -39,10 +39,12 @@ always_comb
             score_int = score;
             update_score = 1'b0;
             update_write = 1'b1;
-            waddr_int = 10'h3FF;
-            wdata_int = 8'hFF;
+            waddr_int = waddr;
+            wdata_int = wdata;
         end
     endcase
+
+assign clrcmd = reset | update_score | update_write;
 
 flopenr #(1) we_flop(.clk, .reset, .en(update_write), .d(we_int), .q(we));
 
