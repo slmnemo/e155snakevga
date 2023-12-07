@@ -132,32 +132,43 @@ void update_score(int score_input) {
 void draw_snake()
 {
     // draw green for all positions where the snake is
-    for (int i = 0; i < num_tails; i++)
+    
+    if (num_tails > 0)
     {
-        int y = tails_y[i];
-        int x = tails_x[i];
+        int y = tails_y[num_tails-1];
+        int x = tails_x[num_tails-1];
 
+        // write tail 
         write_pixel(y + TOP_BORDER_WIDTH, x + SIDE_BORDER_WIDTH, GREEN);
     }
-
+    
+    // write head
     write_pixel(snake_head_y + TOP_BORDER_WIDTH, snake_head_x + SIDE_BORDER_WIDTH, GREEN);
+
+    // write fruit
     write_pixel(fruit_y + TOP_BORDER_WIDTH, fruit_x + SIDE_BORDER_WIDTH, RED);
     
 }
 
 void clear_snake()
 {
-    // write black to where the snake is
-    for (int i = 0; i < num_tails; i++)
+    // write black to where the last tail is
+    
+    if (num_tails > 0)
     {
-        int y = tails_y[i];
-        int x = tails_x[i];
+        int y = tails_y[num_tails-1];
+        int x = tails_x[num_tails-1];
 
+        // clear tail 
         write_pixel(y + TOP_BORDER_WIDTH, x + SIDE_BORDER_WIDTH, BLACK);
     }
 
-    write_pixel(snake_head_y + TOP_BORDER_WIDTH, snake_head_x + SIDE_BORDER_WIDTH, BLACK);
-    write_pixel(fruit_y + TOP_BORDER_WIDTH, fruit_x + SIDE_BORDER_WIDTH, BLACK);
+    
+    if (num_tails == 0) 
+    {
+        write_pixel(snake_head_y + TOP_BORDER_WIDTH, snake_head_x + SIDE_BORDER_WIDTH, BLACK);
+    } 
+    // write_pixel(fruit_y + TOP_BORDER_WIDTH, fruit_x + SIDE_BORDER_WIDTH, BLACK);
 }
 
 void init_game() {
@@ -222,6 +233,7 @@ void place_fruit() {
     // if the fruit appears where the snake is, it's a feature not a bug!
     fruit_x = rand() % GAME_COLS;
     fruit_y = rand() % GAME_ROWS;
+
     return;
 }
 
@@ -249,7 +261,7 @@ void input(direction_t new_input) {
             }
             break;
         case STOP:
-            // do nothing
+            dir = STOP;
             break;
         default:
             game_over = 1;
@@ -301,8 +313,6 @@ void game_logic() {
             // do nothing
             break;
     }
-
-    // TODO: call to write_pixel to update head
     
     // check boundary conditions
     if (snake_head_x < 0 || snake_head_x >= GAME_COLS || snake_head_y < 0 || snake_head_y >= GAME_ROWS)

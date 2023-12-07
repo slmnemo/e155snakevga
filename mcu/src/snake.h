@@ -48,7 +48,6 @@ typedef enum spi_command {
 
 
 void write_pixel(uint8_t pixel_x, uint8_t pixel_y, color_t color);
-
 void write_border(color_t color);
 void write_splash_screen(int* lines);
 
