@@ -80,10 +80,35 @@ void write_border(color_t color)
     return;
 }
 
-void write_start_screen()
-{
-    return;
+void write_splash_screen(int* lines) {
+    // lines is separated by -1 when we are to go to next line
+    printf("this called\n");
+    int const snake_y_offset = 4;
+    int const snake_lines = 7;
+    int const MAX_ITER = 400;
+    int i = 0;
+    int x = 0;
+    int not_term = 1;
+    i = 0;
+    for (int y=snake_y_offset; y < snake_y_offset + snake_lines; y++) {
+        not_term = 1;
+        while (not_term && i < MAX_ITER)
+        {
+            x = lines[i];
+
+            
+            if (x < 0) {
+                not_term = 0;
+            } else {
+                write_pixel(y, x, GREEN);
+                printf("splash %d, %d\n", y, x);
+
+            }
+            i++;
+          }
+    }
 }
+
 
 // ******************* GAME LOGIC FUNCTIONS ***********************
 
@@ -151,26 +176,6 @@ void init_game() {
 
     return;
 }
-
-//void write_splash_screen(int[][] *snakelines) {
-//    int const snake_y_offset = 4;
-//    int const snake_lines = 7;
-//    int i = 0;
-//    int x = 0;
-//    int not_term = 1;
-//    for (y=snake_y_offset, y < snake_y_offset + snake_lines, y++) {
-//        not_term = 1;
-//        i = 0;
-//        while (not_term)
-//            x = snakelines[i];
-//            if (x < 0) {
-//                not_term = 0;
-//            } else {
-//                write_pixel(x, y, GREEN);
-//            }
-//            i++
-//    }
-//}
 
 void draw() {
     // function to draw game to terminal, mostly for PC debugging

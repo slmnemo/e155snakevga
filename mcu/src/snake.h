@@ -17,23 +17,9 @@
 #define MAX_NUM_TAILS GAME_ROWS*GAME_COLS
 
 // Array containing X values to write for each Y value in an array to draw snake (y-negative) [x][y]
-// 
+
 // Each line terminates with a -1.
-// int[7][20] snakelines = {
-//     {2, 3, 4, 5,  7, 11, 14, 15, 16, 17, 18, 21, 22, 23, 24, 26, 27, 28, 29, -1}, // Line 0
-//     {2, 3, 7, 8, 11, 14, 15, 17, 18, 21, 24, 26, 27,  -1,  0,  0,  0,  0,  0, 0},
-//     {2, 7, 8, 11, 14, 18, 21, 23, 24, 26, 0, -1,  0, 0,  0,  0,  0,  0,  0,  0},
-//     {3, 4, 5, 7, 9, 11, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 26, 27, 28, -1},
-//     {5, 7, 10, 11, 14, 18, 21, 22, 23, 24, 26, -1},
-//     {4, 5, 7, 10, 11, 14, 18, 21, 24, 26, 27, -1},
-//     {2, 3, 4, 5, 7, 11, 14, 18, 21, 24, 26, 27, 28, 29, -1}
-// };
 
-// int[7][20] snakelines = {
-//     {2, 3, 4, 5,  7, 11, 14, 15, 16, 17, 18, 21, 22, 23, 24, 26, 27, 28, 29, -1}, // Line 0
-
-
-// };
 
 typedef enum color {
     // using R G B encoding for each color
@@ -64,8 +50,8 @@ typedef enum spi_command {
 
 void write_pixel(uint8_t pixel_x, uint8_t pixel_y, color_t color);
 
-void write_start_screen();
 void write_border(color_t color);
+void write_splash_screen(int* lines);
 
 // game logic functions
 void init_game();
