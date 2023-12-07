@@ -16,7 +16,8 @@ Purpose : Generic application start
 #include "main.h"
 
 
-direction_t input_dir;
+direction_t input_dir = STOP;
+int score = 0;
 int game_over = 0;
 
 void init_interrupts() {
@@ -129,7 +130,7 @@ int main(void) {
   RCC->AHB2ENR |= (RCC_AHB2ENR_GPIOAEN | RCC_AHB2ENR_GPIOBEN | RCC_AHB2ENR_GPIOCEN);
 
   // "clock divide" = master clock frequency / desired baud rate
-  // the phase for the SPI clock is 1 and the polarity is 0
+  // the phase for the SPI clock is 0 and the polarity is 0
   initSPI(0, 0, 0);
 
   // initialize timer
@@ -138,8 +139,6 @@ int main(void) {
 
   initTIM(DELAY_TIM_MS, 1e3); // give ms delay timing
   initTIM(DELAY_TIM_US, 1e6); // give us delay timing
-
-
   
   // button inputs
   pinMode(BUTTON_DOWN, GPIO_INPUT);
@@ -155,34 +154,17 @@ int main(void) {
   delay_millis(DELAY_TIM_MS, 300);
   init_interrupts();
 
-  clear_screen();
-  init_game();
+
+
+  
 
   while(1)
   {
-    uint8_t color_counter = 0;
-    //// write_pixel(1, 1, GREEN);
-    //for (uint8_t i = 0; i < SCREEN_ROWS; i++) {
-    //  for (uint8_t j = 0; j < SCREEN_COLS; j++) {
-    //    write_pixel(i, j, (color_t)color_counter);
-    //    color_counter++;
-    //    if (color_counter > 7) color_counter = 0;
-    //  }
-    //}
 
 
-    // vertical rainbow?
-    // for (uint8_t i = 0; i < SCREEN_ROWS; i++) {
-    //   for (uint8_t j = 0; j < SCREEN_COLS; j++) {
-    //       write_pixel(i, j, (color_t)color_counter);
-    //       color_counter++;
-    //       if (color_counter > 7) color_counter = 0;
-    //   }
-    // }
-
-    // write_pixel(1,1,RED);
-    // write_pixel(1,2,BLUE);
-    
+    clear_screen();
+    write_border(WHITE);
+    init_game();
     int disp_score = 0;
     while(!game_over) {
       input(input_dir);
@@ -192,15 +174,15 @@ int main(void) {
       game_logic();
       // printf("game over is %d", game_over);
       // delay_millis(DELAY_TIM_MS, 300);
-      delay_micros(DELAY_TIM_US, 60000);
-      update_score(disp_score);
-      disp_score++;
+      delay_millis(DELAY_TIM_MS, 150);
     }
+    input_dir = STOP;
+    write_border(RED);
+    while(input_dir == STOP); // wait for user input
+    score = 0;
     
 
   }
-
-
 }
 
 /*************************** End of file ****************************/

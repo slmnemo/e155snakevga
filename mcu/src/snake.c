@@ -15,26 +15,68 @@ void write_pixel(uint8_t pixel_x, uint8_t pixel_y, color_t color)
     spiSendReceive(pixel_y);
     spiSendReceive(pixel_x);
     SPI_END; // set CS back to low
-
     return;
-
 }
 
 void clear_screen()
 {
-    for (uint8_t i = 0; i < SCREEN_ROWS; i++) {
-        for (uint8_t j = 0; j < SCREEN_COLS; j++) {
-            write_pixel(i, j, BLACK);
-            delay_micros(DELAY_TIM_US, 10);
-        }
-    }
-
+    color_entire_screen(BLACK);
     return;
 
 }
 
-void write_border()
+void color_entire_screen(color_t color)
 {
+    for (uint8_t i = 0; i < SCREEN_ROWS; i++) {
+        for (uint8_t j = 0; j < SCREEN_COLS; j++) {
+            write_pixel(i, j, color);
+            // delay_micros(DELAY_TIM_US, 1000);
+        }
+    }
+}
+
+
+void write_border(color_t color)
+{
+    // draw top border
+    for(int row = 0; row < TOP_BORDER_WIDTH; row++)
+    {
+        for(int col = 0; col < SCREEN_COLS; col++)
+        {
+            write_pixel(row, col, color);
+        }
+    }
+
+    // draw bottom border
+    for (int row = SCREEN_ROWS - 1; row > (SCREEN_ROWS - BOTTOM_BORDER_WIDTH - 1); row--)
+    {
+        for(int col = 0; col < SCREEN_COLS; col++)
+        {
+            write_pixel(row, col, color);
+        }
+    }
+
+    // left border
+    for (int col = 0; col < SIDE_BORDER_WIDTH; col++)
+    {
+    
+        for(int row = 0; row < SCREEN_COLS; row++)
+        {
+            write_pixel(row, col, color);
+        }
+    }
+
+    // right border
+    for (int col = SCREEN_COLS - 1; col > (SCREEN_COLS -  SIDE_BORDER_WIDTH - 1); col--)
+    {
+    
+        for(int row = 0; row < SCREEN_COLS; row++)
+        {
+            write_pixel(row, col, color);
+        }
+    }
+
+
     return;
 }
 
@@ -48,13 +90,13 @@ void write_start_screen()
 uint8_t snake_head_x, snake_head_y, fruit_x, fruit_y;
 uint8_t tails_x[MAX_NUM_TAILS];
 uint8_t tails_y[MAX_NUM_TAILS];
-int num_tails;
+int num_tails, got_fruit;
 direction_t dir;
 extern int game_over;
-int score;
+extern int score;
 
 void update_score(int score_input) {
-    uint8_t score_MSB = (score_input << 8) & 0b11; // bits 9 and 10
+    uint8_t score_MSB = (score_input >> 8) & 0b11; // bits 9 and 10
     uint8_t score_LSB = score_input & 0xFF;
 
     SPI_BEGIN;
@@ -64,40 +106,71 @@ void update_score(int score_input) {
     SPI_END;
 }
 
+void draw_snake()
+{ 
+    for (int i = 0; i < num_tails; i++)
+    {
+        int y = tails_y[i];
+        int x = tails_x[i];
+
+        write_pixel(y + TOP_BORDER_WIDTH, x + SIDE_BORDER_WIDTH, GREEN);
+    }
+
+    write_pixel(snake_head_y + TOP_BORDER_WIDTH, snake_head_x + SIDE_BORDER_WIDTH, GREEN);
+    write_pixel(fruit_y + TOP_BORDER_WIDTH, fruit_x + SIDE_BORDER_WIDTH, RED);
+    
+}
+
+void clear_snake()
+{
+    for (int i = 0; i < num_tails; i++)
+    {
+        int y = tails_y[i];
+        int x = tails_x[i];
+
+        write_pixel(y + TOP_BORDER_WIDTH, x + SIDE_BORDER_WIDTH, BLACK);
+    }
+
+    write_pixel(snake_head_y + TOP_BORDER_WIDTH, snake_head_x + SIDE_BORDER_WIDTH, BLACK);
+    write_pixel(fruit_y + TOP_BORDER_WIDTH, fruit_x + SIDE_BORDER_WIDTH, BLACK);
+}
+
 void init_game() {
     game_over = 0;
     dir = STOP;
     num_tails = 0;
+    got_fruit = 0;
     snake_head_x = GAME_COLS / 2;
     snake_head_y = GAME_ROWS / 2;
+    update_score(score);
 
     // send pixel command to init head
-    write_pixel(snake_head_y, snake_head_x, GREEN);
+    write_pixel(snake_head_y + TOP_BORDER_WIDTH, snake_head_x + SIDE_BORDER_WIDTH, GREEN);
 
     place_fruit();
 
     return;
 }
 
-void write_snake(int[][] *snakelines) {
-    int const snake_y_offset = 4;
-    int const snake_lines = 7;
-    int i = 0;
-    int x = 0;
-    int not_term = 1;
-    for (y=snake_y_offset, y < snake_y_offset + snake_lines, y++) {
-        not_term = 1;
-        i = 0;
-        while (not_term)
-            x = snakelines[i];
-            if (x < 0) {
-                not_term = 0;
-            } else {
-                write_pixel(x, y, GREEN);
-            }
-            i++
-    }
-}
+//void write_splash_screen(int[][] *snakelines) {
+//    int const snake_y_offset = 4;
+//    int const snake_lines = 7;
+//    int i = 0;
+//    int x = 0;
+//    int not_term = 1;
+//    for (y=snake_y_offset, y < snake_y_offset + snake_lines, y++) {
+//        not_term = 1;
+//        i = 0;
+//        while (not_term)
+//            x = snakelines[i];
+//            if (x < 0) {
+//                not_term = 0;
+//            } else {
+//                write_pixel(x, y, GREEN);
+//            }
+//            i++
+//    }
+//}
 
 void draw() {
     // function to draw game to terminal, mostly for PC debugging
@@ -145,7 +218,6 @@ void place_fruit() {
     fruit_x = rand() % GAME_COLS;
     fruit_y = rand() % GAME_ROWS;
 
-    write_pixel(fruit_y, fruit_x, RED);
     return;
 }
 
@@ -182,6 +254,13 @@ void input(direction_t new_input) {
 }
 
 void game_logic() {
+    clear_snake();
+
+    if (got_fruit)
+    {
+        got_fruit = 0;
+        num_tails++;
+    }
     int prev_head_x = tails_x[0];
     int prev_head_y = tails_y[0];
 
@@ -191,8 +270,11 @@ void game_logic() {
 
     // clear old tail
     if (num_tails > 0) {
-        printf("clearing old tail\n");
-
+        // printf("clearing old tail\n");
+        uint8_t last_tail_x = tails_x[num_tails];
+        uint8_t last_tail_y = tails_y[num_tails];
+        // write_pixel(last_tail_y, last_tail_x, CYAN);
+        // printf("wrote tail at %d %d\n", last_tail_y, last_tail_x);
     }
 
     // propagate tails
@@ -226,7 +308,6 @@ void game_logic() {
     }
 
     printf("updating head at %d %d\n", snake_head_x, snake_head_y);
-    write_pixel(snake_head_y, snake_head_x, GREEN);
 
     // TODO: call to write_pixel to update head
     
@@ -238,11 +319,18 @@ void game_logic() {
     for (int i = 0; i < num_tails; i++)
         if (tails_x[i] == snake_head_x && tails_y[i] == snake_head_y)
             game_over = 1;
+            printf("hit game over\n");
 
     // check if head ate fruit
     if (snake_head_x == fruit_x && snake_head_y == fruit_y) {
-        num_tails++;
+        got_fruit = 1;
+        //num_tails++;
         place_fruit();
         score += 1;
+        update_score(score);
     }
+
+    draw_snake();
+
+    return;
 }
