@@ -1,7 +1,7 @@
 # Configuration Options
 theme: minima
 title: Snake through 32x24 1-bit color resolution VGA graphics card
-Description: This is the documentation for Kaitlin Lucio and Diego Herrera Vicioso's final project in E155. This page is broken into three subpages, FPGA, MCU, and schematics. Enjoy!
+description: "This is the documentation for Kaitlin Lucio and Diego Herrera Vicioso's final project in E155. This page is broken into three subpages, FPGA, MCU, and schematics. Enjoy!"
 
 header-pages:
   - documentation.html

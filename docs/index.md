@@ -7,10 +7,7 @@ exclude: true
 
 # Project Abstract
 
-
-<div style="text-align: left">
-  <img src="./assets/img/Logo.png" alt="logo" width="100" />
-</div>
+Snake on VGA is a project designed to play around with video protocols while displaying a fun game to play. The 
 
 
 # Project Motivation
