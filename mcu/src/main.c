@@ -15,6 +15,14 @@ Purpose : Generic application start
 #include <stdint.h>
 #include "main.h"
 
+const int splash_screen[] = {2, 3, 4, 5,  7, 11, 14, 15, 16, 17, 18, 21, 24, 26, 27, 28, 29, -1, // Line 0
+                    2, 7, 8, 11, 14, 18, 21, 24, 26, -1,
+                    2, 7, 8, 11, 14, 18, 21, 23, 24, 26, -1,
+                    3, 4, 5, 7, 9, 11, 14, 15, 16, 17, 18, 21, 22, 23, 26, 27, 28, -1,
+                    5, 7, 10, 11, 14, 18, 21, 22, 23, 24, 26, -1,
+                    5, 7, 10, 11, 14, 18, 21, 24, 26, -1,
+                    2, 3, 4, 5, 7, 11, 14, 18, 21, 24, 26, 27, 28, 29, -1};
+
 
 direction_t input_dir = STOP;
 int score = 0;
@@ -69,7 +77,6 @@ void EXTI0_IRQHandler(void) {
         // Then toggle the LED
         
         input_dir = RIGHT;
-        printf("right\n");
 
     }
 
@@ -83,7 +90,6 @@ void EXTI9_5_IRQHandler(void) {
 
         // Then toggle the LED
         input_dir = LEFT;
-        printf("left\n");
         
 
     }
@@ -94,7 +100,6 @@ void EXTI9_5_IRQHandler(void) {
 
         // Then toggle the LED
         input_dir = UP;
-        printf("up\n");
 
     }
     return;
@@ -108,7 +113,6 @@ void EXTI15_10_IRQHandler(void) {
 
         // Then toggle the LED
         input_dir = DOWN;
-        printf("down\n");
 
     }
 
@@ -151,7 +155,6 @@ int main(void) {
   GPIOB->PUPDR |= _VAL2FLD(GPIO_PUPDR_PUPD7, 0b01); // Set PB7 as pull-up
   GPIOB->PUPDR |= _VAL2FLD(GPIO_PUPDR_PUPD6, 0b01); // Set PB6 as pull-up
   GPIOB->PUPDR |= _VAL2FLD(GPIO_PUPDR_PUPD0, 0b01); // Set PB0 as pull-up
-  delay_millis(DELAY_TIM_MS, 300);
   init_interrupts();
 
 
@@ -160,9 +163,12 @@ int main(void) {
 
   while(1)
   {
-
-
     clear_screen();
+    write_splash_screen(splash_screen);
+    input_dir = STOP;
+    while(input_dir == STOP);
+    clear_screen();
+
     write_border(WHITE);
     init_game();
     int disp_score = 0;
