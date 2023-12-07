@@ -5,4 +5,5 @@
 \#auto_saved_files#
 *-backups
 *.lck
+*-bak
 fpga/radiant_files/
