@@ -82,7 +82,6 @@ void write_border(color_t color)
 
 void write_splash_screen(int* lines) {
     // lines is separated by -1 when we are to go to next line
-    printf("this called\n");
     int const snake_y_offset = 4;
     int const snake_lines = 7;
     int const MAX_ITER = 400;
@@ -101,8 +100,6 @@ void write_splash_screen(int* lines) {
                 not_term = 0;
             } else {
                 write_pixel(y, x, GREEN);
-                printf("splash %d, %d\n", y, x);
-
             }
             i++;
           }
@@ -121,6 +118,7 @@ extern int game_over;
 extern int score;
 
 void update_score(int score_input) {
+    // send score to FPGA
     uint8_t score_MSB = (score_input >> 8) & 0b11; // bits 9 and 10
     uint8_t score_LSB = score_input & 0xFF;
 
@@ -132,7 +130,8 @@ void update_score(int score_input) {
 }
 
 void draw_snake()
-{ 
+{
+    // draw green for all positions where the snake is
     for (int i = 0; i < num_tails; i++)
     {
         int y = tails_y[i];
@@ -148,6 +147,7 @@ void draw_snake()
 
 void clear_snake()
 {
+    // write black to where the snake is
     for (int i = 0; i < num_tails; i++)
     {
         int y = tails_y[i];
@@ -178,8 +178,7 @@ void init_game() {
 }
 
 void draw() {
-    // function to draw game to terminal, mostly for PC debugging
-    // system("cls");
+    // function to draw game to terminal, mostly for debugging
 
     for (int i = 0; i < GAME_COLS + 2; i++)
         printf("#");
@@ -220,9 +219,9 @@ void draw() {
 
 void place_fruit() {
     // naive placement of fruit, does not account for where snake is
+    // if the fruit appears where the snake is, it's a feature not a bug!
     fruit_x = rand() % GAME_COLS;
     fruit_y = rand() % GAME_ROWS;
-
     return;
 }
 
@@ -273,15 +272,6 @@ void game_logic() {
     tails_x[0] = snake_head_x;
     tails_y[0] = snake_head_y;
 
-    // clear old tail
-    if (num_tails > 0) {
-        // printf("clearing old tail\n");
-        uint8_t last_tail_x = tails_x[num_tails];
-        uint8_t last_tail_y = tails_y[num_tails];
-        // write_pixel(last_tail_y, last_tail_x, CYAN);
-        // printf("wrote tail at %d %d\n", last_tail_y, last_tail_x);
-    }
-
     // propagate tails
     for (int i = 1; i < num_tails; i++) {
         int temp_x = tails_x[i]; 
@@ -312,8 +302,6 @@ void game_logic() {
             break;
     }
 
-    printf("updating head at %d %d\n", snake_head_x, snake_head_y);
-
     // TODO: call to write_pixel to update head
     
     // check boundary conditions
@@ -324,12 +312,10 @@ void game_logic() {
     for (int i = 0; i < num_tails; i++)
         if (tails_x[i] == snake_head_x && tails_y[i] == snake_head_y)
             game_over = 1;
-            printf("hit game over\n");
 
     // check if head ate fruit
     if (snake_head_x == fruit_x && snake_head_y == fruit_y) {
         got_fruit = 1;
-        //num_tails++;
         place_fruit();
         score += 1;
         update_score(score);

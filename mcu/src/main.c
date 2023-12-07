@@ -15,13 +15,13 @@ Purpose : Generic application start
 #include <stdint.h>
 #include "main.h"
 
-const int splash_screen[] = {2, 3, 4, 5,  7, 11, 14, 15, 16, 17, 18, 21, 24, 26, 27, 28, 29, -1, // Line 0
-                    2, 7, 8, 11, 14, 18, 21, 24, 26, -1,
-                    2, 7, 8, 11, 14, 18, 21, 23, 24, 26, -1,
-                    3, 4, 5, 7, 9, 11, 14, 15, 16, 17, 18, 21, 22, 23, 26, 27, 28, -1,
-                    5, 7, 10, 11, 14, 18, 21, 22, 23, 24, 26, -1,
-                    5, 7, 10, 11, 14, 18, 21, 24, 26, -1,
-                    2, 3, 4, 5, 7, 11, 14, 18, 21, 24, 26, 27, 28, 29, -1};
+const int splash_screen[] =  {2, 3, 4, 5,  7, 11, 14, 15, 16, 17, 18, 21, 24, 26, 27, 28, 29, -1, // Line 0
+                              2, 7, 8, 11, 14, 18, 21, 24, 26, -1, //line 1
+                              2, 7, 8, 11, 14, 18, 21, 23, 24, 26, -1, // etc
+                              3, 4, 5, 7, 9, 11, 14, 15, 16, 17, 18, 21, 22, 23, 26, 27, 28, -1,
+                              5, 7, 10, 11, 14, 18, 21, 22, 23, 24, 26, -1,
+                              5, 7, 10, 11, 14, 18, 21, 24, 26, -1,
+                              2, 3, 4, 5, 7, 11, 14, 18, 21, 24, 26, 27, 28, 29, -1};
 
 
 direction_t input_dir = STOP;
@@ -73,8 +73,6 @@ void EXTI0_IRQHandler(void) {
     if (EXTI->PR1 & (1 << 0)) {
         // If so, clear the interrupt (NB: Write 1 to reset.)
         EXTI->PR1 |= (1 << 0);
-
-        // Then toggle the LED
         
         input_dir = RIGHT;
 
@@ -88,7 +86,6 @@ void EXTI9_5_IRQHandler(void) {
         // If so, clear the interrupt (NB: Write 1 to reset.)
         EXTI->PR1 |= (1 << 6);
 
-        // Then toggle the LED
         input_dir = LEFT;
         
 
@@ -98,7 +95,6 @@ void EXTI9_5_IRQHandler(void) {
         // If so, clear the interrupt (NB: Write 1 to reset.)
         EXTI->PR1 |= (1 << 7);
 
-        // Then toggle the LED
         input_dir = UP;
 
     }
@@ -111,7 +107,6 @@ void EXTI15_10_IRQHandler(void) {
         // If so, clear the interrupt (NB: Write 1 to reset.)
         EXTI->PR1 |= (1 << 12);
 
-        // Then toggle the LED
         input_dir = DOWN;
 
     }
@@ -127,8 +122,6 @@ void EXTI15_10_IRQHandler(void) {
 *   Application entry point.
 */
 int main(void) {
-  // Configure flash latency and set clock to run at 80 MHz
-  // configureClock();
 
   // Enable GPIOA clock
   RCC->AHB2ENR |= (RCC_AHB2ENR_GPIOAEN | RCC_AHB2ENR_GPIOBEN | RCC_AHB2ENR_GPIOCEN);
@@ -166,22 +159,18 @@ int main(void) {
     clear_screen();
     write_splash_screen(splash_screen);
     input_dir = STOP;
-    while(input_dir == STOP);
-    clear_screen();
+    while(input_dir == STOP); // wait for user input
 
+    clear_screen();
     write_border(WHITE);
     init_game();
-    int disp_score = 0;
+
     while(!game_over) {
       input(input_dir);
-      // clear_screen();
-      // draw();
-      // printf("run game logic\n");
       game_logic();
-      // printf("game over is %d", game_over);
-      // delay_millis(DELAY_TIM_MS, 300);
       delay_millis(DELAY_TIM_MS, 150);
     }
+    // game is over
     input_dir = STOP;
     write_border(RED);
     while(input_dir == STOP); // wait for user input
