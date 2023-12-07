@@ -45,6 +45,26 @@ void init_game() {
     num_tails = 0;
 }
 
+void write_snake(int[][] *snakelines) {
+    int const snake_y_offset = 4;
+    int const snake_lines = 7;
+    int i = 0;
+    int x = 0;
+    int not_term = 1;
+    for (y=snake_y_offset, y < snake_y_offset + snake_lines, y++) {
+        not_term = 1;
+        i = 0;
+        while (not_term)
+            x = snakelines[i];
+            if (x < 0) {
+                not_term = 0;
+            } else {
+                write_pixel(x, y, GREEN);
+            }
+            i++
+    }
+}
+
 void draw() {
     // function to draw game to terminal, mostly for PC debugging
     system("cls");
