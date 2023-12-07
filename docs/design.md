@@ -12,14 +12,14 @@ Communication between the FPGA and MCU is entirely controlled by the MCU, as the
 ![SPI Timing Diagram](./assets/img/spi_timing.png)
 
 The command, data1, and data2 bytes follow the following table:
-| Command | Hex Encoding | Data Byte 1 | Data Byte 2|
-| -------- | -------------- | ------------- | ---------- |
-| Write Color Base Address | 0x80 | X Position | Y Position|
+| Command | Hex Encoding | Data Byte 1 | Data Byte 2 |
+| ------- | ------------ | ----------- | ----------- |
+| Write Color Base Address | 0x80 | X Position | Y Position |
 | Update Score | 0x10 | Score value MSBs | Score value LSBs |
 
 To set a specific color with the Write Color Base Address command, the lowest 3 bytes of the command byte follow the following encoding:
 | Lowest 3 bits of command | Color |
-| -- | -- |
+| ------------------------ | ----- |
 | 0 | Black |
 | 1 | Blue | 
 | 2 | Green | 
