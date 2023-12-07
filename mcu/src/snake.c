@@ -12,14 +12,31 @@ void write_pixel(uint8_t pixel_x, uint8_t pixel_y, color_t color)
     // begin SPI transaction
     SPI_BEGIN; // pull CS high
     spiSendReceive((char)command);
-    spiSendReceive(pixel_x);
     spiSendReceive(pixel_y);
+    spiSendReceive(pixel_x);
     SPI_END; // set CS back to low
 
     return;
 
 }
 
+void clear_screen()
+{
+    for (uint8_t i = 0; i < SCREEN_ROWS; i++) {
+        for (uint8_t j = 0; j < SCREEN_COLS; j++) {
+            write_pixel(i, j, BLACK);
+            delay_micros(DELAY_TIM_US, 10);
+        }
+    }
+
+    return;
+
+}
+
+void write_border()
+{
+    return;
+}
 
 void write_start_screen()
 {
@@ -28,21 +45,38 @@ void write_start_screen()
 
 // ******************* GAME LOGIC FUNCTIONS ***********************
 
-int snake_head_x, snake_head_y, fruit_x, fruit_y;
-int tails_x[MAX_NUM_TAILS], tails_y[MAX_NUM_TAILS];
+uint8_t snake_head_x, snake_head_y, fruit_x, fruit_y;
+uint8_t tails_x[MAX_NUM_TAILS];
+uint8_t tails_y[MAX_NUM_TAILS];
 int num_tails;
 direction_t dir;
-int game_over;
+extern int game_over;
 int score;
+
+void update_score(int score_input) {
+    uint8_t score_MSB = (score_input << 8) & 0b11; // bits 9 and 10
+    uint8_t score_LSB = score_input & 0xFF;
+
+    SPI_BEGIN;
+    spiSendReceive((char)UPDATE_SCORE);
+    spiSendReceive(score_MSB);
+    spiSendReceive(score_LSB);
+    SPI_END;
+}
 
 void init_game() {
     game_over = 0;
     dir = STOP;
-    snake_head_x = WIDTH / 2;
-    snake_head_y = HEIGHT / 2;
-    fruit_x = rand() % WIDTH;
-    fruit_y = rand() % HEIGHT;
     num_tails = 0;
+    snake_head_x = GAME_COLS / 2;
+    snake_head_y = GAME_ROWS / 2;
+
+    // send pixel command to init head
+    write_pixel(snake_head_y, snake_head_x, GREEN);
+
+    place_fruit();
+
+    return;
 }
 
 void write_snake(int[][] *snakelines) {
@@ -67,14 +101,14 @@ void write_snake(int[][] *snakelines) {
 
 void draw() {
     // function to draw game to terminal, mostly for PC debugging
-    system("cls");
+    // system("cls");
 
-    for (int i = 0; i < WIDTH + 2; i++)
+    for (int i = 0; i < GAME_COLS + 2; i++)
         printf("#");
     printf("\n");
 
-    for (int i = 0; i < HEIGHT; i++) {
-        for (int j = 0; j < WIDTH; j++) {
+    for (int i = 0; i < GAME_ROWS; i++) {
+        for (int j = 0; j < GAME_COLS; j++) {
             if (j == 0)
                 printf("#");
 
@@ -95,52 +129,55 @@ void draw() {
                     printf(" ");
             }
 
-            if (j == WIDTH - 1)
+            if (j == GAME_COLS - 1)
                 printf("#");
         }
         printf("\n");
     }
 
-    for (int i = 0; i < WIDTH + 2; i++)
+    for (int i = 0; i < GAME_COLS + 2; i++)
         printf("#");
     printf("\n");
 }
 
 void place_fruit() {
     // naive placement of fruit, does not account for where snake is
-    fruit_x = rand() % NUM_COLS;
-    fruit_y = rand() % NUM_ROWS;
+    fruit_x = rand() % GAME_COLS;
+    fruit_y = rand() % GAME_ROWS;
+
+    write_pixel(fruit_y, fruit_x, RED);
     return;
 }
 
-void input() {
-    // use PC keyboard input for now for testing
-    if (_kbhit()) {
-        switch (_getch()) {
-            case 'a': // moving left
-                if (dir != RIGHT) {
-                    dir = LEFT;
-                }
-                break;
-            case 'd': // moving right
-                if (dir != LEFT) {
-                    dir = RIGHT;
-                }
-                break;
-            case 'w': // moving up
-                if (dir != DOWN) {
-                    dir = UP;
-                }
-                break;
-            case 's': // moving down
-                if (dir != UP) {
-                    dir = DOWN;
-                }
-                break;
-            case 'x':
-                game_over = 1;
-                break;
-        }
+void input(direction_t new_input) {
+   // use PC keyboard input for now for testing
+    switch (new_input) {
+        case LEFT: // moving left
+            if (dir != RIGHT) {
+                dir = LEFT;
+            }
+            break;
+        case RIGHT: // moving right
+            if (dir != LEFT) {
+                dir = RIGHT;
+            }
+            break;
+        case UP: // moving up
+            if (dir != DOWN) {
+                dir = UP;
+            }
+            break;
+        case DOWN: // moving down
+            if (dir != UP) {
+                dir = DOWN;
+            }
+            break;
+        case STOP:
+            // do nothing
+            break;
+        default:
+            game_over = 1;
+            break;
     }
 }
 
@@ -152,6 +189,12 @@ void game_logic() {
     tails_x[0] = snake_head_x;
     tails_y[0] = snake_head_y;
 
+    // clear old tail
+    if (num_tails > 0) {
+        printf("clearing old tail\n");
+
+    }
+
     // propagate tails
     for (int i = 1; i < num_tails; i++) {
         int temp_x = tails_x[i]; 
@@ -162,7 +205,6 @@ void game_logic() {
         prev_head_y = temp_y;
     }
 
-    // TODO: call to write_pixel to update tail position
 
     // propagate head
     switch (dir) {
@@ -183,10 +225,13 @@ void game_logic() {
             break;
     }
 
+    printf("updating head at %d %d\n", snake_head_x, snake_head_y);
+    write_pixel(snake_head_y, snake_head_x, GREEN);
+
     // TODO: call to write_pixel to update head
     
     // check boundary conditions
-    if (snake_head_x < 0 || snake_head_x >= NUM_COLS || snake_head_y < 0 || snake_head_y >= NUM_ROWS)
+    if (snake_head_x < 0 || snake_head_x >= GAME_COLS || snake_head_y < 0 || snake_head_y >= GAME_ROWS)
         game_over = 1;
 
     // check if head runs into tails

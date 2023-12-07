@@ -3,9 +3,14 @@
 
 #include "STM32L432KC.h"
 
-#define NUM_ROWS 20
-#define NUM_COLS 30
-#define MAX_NUM_TAILS = NUM_ROWS*NUM_COLS
+#define GAME_ROWS 20
+#define GAME_COLS 30
+
+#define SCREEN_ROWS 24
+#define SCREEN_COLS 32
+#define BORDER_WIDTH 1
+
+#define MAX_NUM_TAILS GAME_ROWS*GAME_COLS
 
 // Array containing X values to write for each Y value in an array to draw snake (y-negative) [x][y]
 // 
@@ -50,14 +55,17 @@ typedef enum spi_command {
 void write_pixel(uint8_t pixel_x, uint8_t pixel_y, color_t color);
 
 void write_start_screen();
+void write_border();
 
 // game logic functions
 void init_game();
 void draw_snake();
 void draw(); // for terminal debugging
 void place_fruit();
-void input(); // for keyboard debugging
+void input(direction_t new_input); 
 void game_logic();
+void update_score(int score);
+void clear_screen();
 
 
 #endif // SNAKE_H
