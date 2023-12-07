@@ -24,7 +24,7 @@ spi spi_inst(.sdi, .sck, .cs, .command_rx, .databyte1_rx, .databyte2_rx);
 
 spi_decoder spi_dec_inst(.clk, .reset, .cs, .spi_done);
 
-flopenr #(24) spi_data_flop(.clk, .reset(cmd_received), .en(spi_done), 
+flopenr #(24) spi_data_flop(.clk, .reset(cmd_received & ~re), .en(spi_done), 
     .d({command_rx, databyte1_rx, databyte2_rx}), 
     .q({command, databyte1, databyte2}));
 

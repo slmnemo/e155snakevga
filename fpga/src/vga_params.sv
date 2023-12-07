@@ -3,7 +3,6 @@ Define file for VGA timings, fetch timings, and
 
 
 */
-`define RISETIMECORRECTION 0
 
 `define HACTIVE 640
 `define HFRONTPORCH 16
@@ -20,22 +19,14 @@ Define file for VGA timings, fetch timings, and
 `define HFETCHNEXTLINE 20
 `define HFETCH `HFULLSCAN - `HFETCHNEXTLINE - 1
 
-// Offsets for number positions
-
-`define ONES_X_OFFSET 300-2
-`define TENS_X_OFFSET 400-2
-`define HUNS_X_OFFSET 500-2
-
-`define ONES_Y_OFFSET 100-2
-`define TENS_Y_OFFSET 200-2
-`define HUNS_Y_OFFSET 300-2
-
 // Vectors defining size of segments
 
-`define L_H 2  // vertical size of horizontal segments
-`define L_V 11 // vertical size of vertical segments
+`define L_H -2  // vertical size of horizontal segments
+`define L_V -11 // vertical size of vertical segments
 `define W_H 11 // horizontal size of horizontal segments
 `define W_V 2  // horizontal size of vertical segments 
+`define HSIZE `W_H + 2*`W_V   // Total horizontal pixels taken up by the segment
+`define VSIZE (-2*`L_V + -3*`L_H) // Total vertical pixels taken up by the segment (up positive)
 
 // Offsets for beginning of each segment
 
@@ -64,5 +55,18 @@ Define file for VGA timings, fetch timings, and
 `define E_Y `VBARLOW_OFFSET_Y
 `define F_Y `VBARHI_OFFSET_Y
 `define G_Y `HBARMID_OFFSET_Y
+
+// Offsets for number positions
+
+`define HSPACING 10 // There's a bug where HSIZE-HSPACING doesn't result in the correct spacing. Setting this to 10 fixes it. Too bad!
+`define VSPACING 2
+
+`define ONES_X_OFFSET `HACTIVE - `HSIZE - `HSPACING - 1
+`define TENS_X_OFFSET `ONES_X_OFFSET - `HSIZE - `HSPACING
+`define HUNS_X_OFFSET `TENS_X_OFFSET - `HSIZE - `HSPACING
+
+`define ONES_Y_OFFSET `VACTIVE-`VSPACING - 1
+`define TENS_Y_OFFSET `VACTIVE-`VSPACING - 1
+`define HUNS_Y_OFFSET `VACTIVE-`VSPACING - 1
 
 

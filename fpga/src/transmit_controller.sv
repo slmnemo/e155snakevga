@@ -15,7 +15,7 @@ module transmit_controller (
 assign output_en = (row < `HACTIVE) & (col < `VACTIVE);
 
 
-assign HSync = ~((row >= (`HACTIVE+`HFRONTPORCH)) & (row < (`HACTIVE+`HFRONTPORCH+`HSYNCPULSE-`RISETIMECORRECTION)));
+assign HSync = ~((row >= (`HACTIVE+`HFRONTPORCH)) & (row < (`HACTIVE+`HFRONTPORCH+`HSYNCPULSE)));
 
 
 assign VSync = ~((col >= (`VACTIVE+`VFRONTPORCH)) & (col < (`VACTIVE+`VFRONTPORCH+`VSYNCPULSE)));
