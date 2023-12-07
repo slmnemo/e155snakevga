@@ -16,6 +16,8 @@ module dpram #(parameter dwidth=8, addr_width=10) (
     always_ff @(posedge clk) begin
         if (we)
             mem[waddr] <= wdata;
+    end
+    always_ff @(posedge clk) begin
         if (re)
             rdata <= mem[raddr];
     end
