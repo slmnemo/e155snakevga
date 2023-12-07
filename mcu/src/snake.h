@@ -44,7 +44,6 @@ typedef enum direction {
 typedef enum spi_command {
     WRITE_COLOR       = 0x80,
     UPDATE_SCORE      = 0x10,
-    UPDATE_GAME_STATE = 0x20
 } spi_command_t;
 
 
