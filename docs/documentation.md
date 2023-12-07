@@ -18,8 +18,16 @@ The source code for the project is located in the Github repository [here](https
 # Bill of Materials
 <!-- The bill of materials should include all the parts used in your project along with the prices and links.  -->
 
-| Item | Part Number | Quantity | Unit Price | Link |
-| ---- | ----------- | ----- | ---- | ---- |
-| Adafruit VL53L0X Time of Flight Distance Sensor |  3317 | 1 | $14.95 |  [link](https://www.adafruit.com/product/3317) |
+| Part | Manufacturer |	Quantity | Unit Price | Description |
+| ---- | ------------ | ---------| ----- | ----------- |
+| Resistor 1.2k	| Stockroom	3	| 	$0.00 |	Found in Stockroom |
+| Resistor 1k	| Stockroom	3	| 	$0.00 |	Found in Stockroom |
+| Resistor 10k	| Stockroom	3	| 	$0.00 |	Found in Stockroom |
+| Resistor 270R	| Stockroom	2	| 	$0.00 |	Found in Stockroom |
+| DIP SPST Button 	| Stockroom	4	| 	$0.00 |	Found in Stockroom |
+| VGA Breakout Board	| Stockroom	1	| 	$0.00 |	Found in Digital Lab |
+| TN2106	| Stockroom	2	| 	$0.00 |	N-type MOSFET, found in Digital Lab |
+| 2N3904	| Stockroom	3	| 	$0.00 |	NPN BJT, found in Digital Lab |
 
-**Total cost: $14.95**
+**Total cost: $0** 
+Nice!
