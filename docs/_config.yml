@@ -1,0 +1,8 @@
+# YAML config file for E155 github website
+
+remote_theme: pages-themes/midnight@v0.2.0
+plugins:
+- jekyll-remote-theme # add this line to the plugins list if you already have one
+
+title: Snake through 32x24 1-bit color resolution VGA graphics card
+Description: This is the documentation for Kaitlin Lucio and Diego Herrera Vicioso's final project in E155. This page is broken into three subpages, FPGA, MCU, and schematics. Look below for a very normal edit :) 
