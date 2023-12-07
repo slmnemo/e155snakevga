@@ -4,7 +4,7 @@ Top module for full graphics card
 */
 module top (
     input logic cs, sck, sdi, resetB,
-    output logic R_out, G_out, B_out, VSyncB, HSyncB, re
+    output logic R_out, G_out, B_out, VSyncB, HSyncB
 );
 
 logic		hsclk, core_clk, reset, VSync, HSync;
