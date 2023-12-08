@@ -174,7 +174,7 @@ void clear_snake()
 void init_game() {
     game_over = 0;
     dir = STOP;
-    num_tails = 100;
+    num_tails = 0;
     got_fruit = 0;
     snake_head_x = GAME_COLS / 2;
     snake_head_y = GAME_ROWS / 2;
