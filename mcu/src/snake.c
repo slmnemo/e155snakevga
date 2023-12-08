@@ -174,7 +174,7 @@ void clear_snake()
 void init_game() {
     game_over = 0;
     dir = STOP;
-    num_tails = 0;
+    num_tails = 100;
     got_fruit = 0;
     snake_head_x = GAME_COLS / 2;
     snake_head_y = GAME_ROWS / 2;
@@ -234,8 +234,10 @@ void place_fruit() {
 
     // goal: get all the empty cells
 
-    int empty_cells_x[MAX_NUM_TAILS];
-    int empty_cells_y[MAX_NUM_TAILS];
+    uint8_t empty_cells_x[MAX_NUM_TAILS];
+    // uint8_t* empty_cells_x = (uint8_t *) malloc((num_tails+1)*sizeof(uint8_t));
+    // uint8_t* empty_cells_y = (uint8_t *) malloc((num_tails+1)*sizeof(uint8_t));
+    uint8_t empty_cells_y[MAX_NUM_TAILS];
     int num_empty = 0;
     // iterate over game board
     if (num_tails == 0)
@@ -243,26 +245,40 @@ void place_fruit() {
         fruit_x = rand() % GAME_COLS;
         fruit_y = rand() % GAME_ROWS;
         return;
-    }  
+    }
 
     for (int x = 0; x < GAME_COLS; x++)
     {
         for (int y = 0; y < GAME_ROWS; y++)
         {
             // check if x value is not occupied
+            int is_occupied = 0;
             for (int tails = 0; tails < num_tails; tails++)
             {
-                // if cell is not occupied
-                if((x != tails_x[tails] && y != tails_y[tails]) &&
-                   (x != snake_head_x && y != snake_head_y));
+                // contains a tail                
+                if(x == tails_x[tails] && y == tails_y[tails]) 
                 {
-                    // add empty cell to empty cell arrays
-                    printf("tail not occupied\n");
-                    empty_cells_x[num_empty] = x;
-                    empty_cells_y[num_empty] - y;
-                    num_empty++;
+                    // add empty cell to empty cell 
+                    is_occupied = 1;
+                    break; //  no need to check rest
                 }
+
+                // contains a head
+                
             }
+
+            if (x == snake_head_x && y == snake_head_y)
+            {
+                is_occupied = 1;
+            }
+
+            if(!is_occupied)
+            {
+                empty_cells_x[num_empty] = x;
+                empty_cells_y[num_empty] = y;
+                num_empty++;
+            }
+            
         }
     }
 
