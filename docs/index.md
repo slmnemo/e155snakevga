@@ -6,7 +6,7 @@ exclude: true
 ---
 
 # Project Abstract
-This is the documentation for Kaitlin Lucio and Diego Herrera Vicioso's final project in E155. 
+This is the project website for Kaitlin Lucio and Diego Herrera Vicioso's final project in E155 at HMC. 
 Snake on VGA is a project designed to play around with video protocols while displaying a classic game.
 
 # Project Motivation
