@@ -3,6 +3,9 @@ layout: page
 title: Design
 permalink: /design/
 ---
+# Design Decisions
+This project focused on using the VGA protocol at the industry standard 640x480 resolution at 60 Hz refresh rate. Holding RGB values for each pixel would require 3\*640\*480 = 921600 bits of memory, more than the FPGA can hold in flip flops or in RAM. Therefore, to mitigate this constraint, we partitioned the screen in 20 pixel square chunks, allowing us to use the onboard embedded block RAM on the FPGA. This results in a chunk resolution of 32 by 24. 
+
 
 # MCU Design
 The MCU in this design is responsible for handling user input and game logic. User input is given through a set of four push buttons, which correspond to each direction the snake can move in. These buttons are tied to interrupts, allowing input to happen at any point during the calculations of game logic. This lets the inputs feel very responsive, as the input won't be missed due to polling at the wrong time. 

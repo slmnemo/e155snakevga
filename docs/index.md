@@ -16,4 +16,12 @@ but thought about what could make it interesting. So, the idea of displaying it 
 # System Block Diagram
 ![Overall Block Diagram](./assets/img/overall_block_diagram.png)
 
+# Demo
+{% include youtube.html id="BkBHMfGXC1A" %}
+
+
+
+### About the Authors
+Diego is a senior Engineering student at HMC. He is interested in electronics and digital design, especially embedded systems. Find him on [LinkedIn](https://www.linkedin.com/in/diegoherreravicioso/)!
+
 
