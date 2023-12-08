@@ -231,8 +231,49 @@ void draw() {
 void place_fruit() {
     // naive placement of fruit, does not account for where snake is
     // if the fruit appears where the snake is, it's a feature not a bug!
-    fruit_x = rand() % GAME_COLS;
-    fruit_y = rand() % GAME_ROWS;
+
+    // goal: get all the empty cells
+
+    int empty_cells_x[MAX_NUM_TAILS];
+    int empty_cells_y[MAX_NUM_TAILS];
+    int num_empty = 0;
+    // iterate over game board
+    if (num_tails == 0)
+    {
+        fruit_x = rand() % GAME_COLS;
+        fruit_y = rand() % GAME_ROWS;
+        return;
+    }  
+
+    for (int x = 0; x < GAME_COLS; x++)
+    {
+        for (int y = 0; y < GAME_ROWS; y++)
+        {
+            // check if x value is not occupied
+            for (int tails = 0; tails < num_tails; tails++)
+            {
+                // if cell is not occupied
+                if((x != tails_x[tails] && y != tails_y[tails]) &&
+                   (x != snake_head_x && y != snake_head_y));
+                {
+                    // add empty cell to empty cell arrays
+                    printf("tail not occupied\n");
+                    empty_cells_x[num_empty] = x;
+                    empty_cells_y[num_empty] - y;
+                    num_empty++;
+                }
+            }
+        }
+    }
+
+    // get random from empty cell array
+    int random_x = rand() % num_empty;
+    int random_y = rand() % num_empty;
+    fruit_x = empty_cells_x[random_x];
+    fruit_y = empty_cells_y[random_y];
+    printf("num_empty = %d\n", num_empty);
+    printf("random x,y %d, %d\n", random_x, random_y);
+    
 
     return;
 }

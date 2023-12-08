@@ -150,10 +150,6 @@ int main(void) {
   GPIOB->PUPDR |= _VAL2FLD(GPIO_PUPDR_PUPD0, 0b01); // Set PB0 as pull-up
   init_interrupts();
 
-
-
-  
-
   while(1)
   {
     clear_screen();
