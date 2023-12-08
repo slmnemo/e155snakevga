@@ -17,6 +17,6 @@ HMC E155 MicroPs Final Project by Kaitlin Lucio and Diego Herrera Vicioso
 └── schematic<br>
     └── lib<br>
 
-MCU Source code can be found in the mcu/src directory, and FPGA source code can be found in the fpga/src directory. FPGA testbenches can be found in the fpga/sec/testbench directory. All sources for generating the project website are found in the docs directory. The KiCAD schematic files can be found in the schematic directory.
+MCU Source code can be found in the mcu/src directory, and FPGA source code can be found in the fpga/src directory. FPGA testbenches can be found in the fpga/sec/testbench directory. All sources for generating the project website are found in the docs directory. 
 
 
