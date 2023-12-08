@@ -17,6 +17,7 @@ Communication between the FPGA and MCU is entirely controlled by the MCU, as the
 The command, data1, and data2 bytes follow the following table:
 
 | Command | Hex Encoding | Data Byte 1 | Data Byte 2 |
+
 | ------- | ------------ | ----------- | ----------- |
 | Write Color Base Address | 0x80 | X Position | Y Position |
 | Update Score | 0x10 | Score value MSBs | Score value LSBs |
@@ -24,15 +25,16 @@ The command, data1, and data2 bytes follow the following table:
 To set a specific color with the Write Color Base Address command, the lowest 3 bytes of the command byte follow the following encoding:
 
 | Lowest 3 bits of command | Color |
+
 | ------------------------ | ----- |
 | 0 | Black |
-| 1 | Blue | 
-| 2 | Green | 
+| 1 | Blue |
+| 2 | Green |
 | 3 | Cyan |
 | 4 | Red |
-| 5 | Purple | 
-| 6 | Yellow | 
-| 7 | White | 
+| 5 | Purple |
+| 6 | Yellow |
+| 7 | White |
 
 For example, to set the pixel at (4,7) to red,
 - command = 0x84
@@ -42,9 +44,8 @@ For example, to set the pixel at (4,7) to red,
 The update score command follows a similar structure, except no data is encoded in the command byte.
 
 
-
-
 ## MCU Block Diagram
+![MCU BD](./assets/img/MCU%20Block%20Diagram.png)
 
 # FPGA Design
 
