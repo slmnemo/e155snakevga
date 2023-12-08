@@ -21,6 +21,9 @@ but thought about what could make it interesting. So, the idea of displaying it 
 {% include youtube.html id="BkBHMfGXC1A" %}
 
 
+# Acknowledgements
+We would like to thank Profs. Brake and Smilkstein for their support this semester in MicroPs. Couldn't have done it without you both!
+
 
 
 
