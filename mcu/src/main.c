@@ -172,7 +172,6 @@ int main(void) {
     while(input_dir == STOP); // wait for user input
     score = 0;
     
-
   }
 }
 

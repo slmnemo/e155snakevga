@@ -229,14 +229,9 @@ void draw() {
 }
 
 void place_fruit() {
-    // naive placement of fruit, does not account for where snake is
-    // if the fruit appears where the snake is, it's a feature not a bug!
-
     // goal: get all the empty cells
 
     uint8_t empty_cells_x[MAX_NUM_TAILS];
-    // uint8_t* empty_cells_x = (uint8_t *) malloc((num_tails+1)*sizeof(uint8_t));
-    // uint8_t* empty_cells_y = (uint8_t *) malloc((num_tails+1)*sizeof(uint8_t));
     uint8_t empty_cells_y[MAX_NUM_TAILS];
     int num_empty = 0;
     // iterate over game board
@@ -271,7 +266,8 @@ void place_fruit() {
             {
                 is_occupied = 1;
             }
-
+            
+            // add cell to arrays if the cell is empty
             if(!is_occupied)
             {
                 empty_cells_x[num_empty] = x;
@@ -285,6 +281,8 @@ void place_fruit() {
     // get random from empty cell array
     int random_x = rand() % num_empty;
     int random_y = rand() % num_empty;
+
+    // Choose a random empty cell
     fruit_x = empty_cells_x[random_x];
     fruit_y = empty_cells_y[random_y];
     printf("num_empty = %d\n", num_empty);
