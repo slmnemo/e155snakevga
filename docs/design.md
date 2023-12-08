@@ -49,8 +49,11 @@ The update score command follows a similar structure, but no extra data is encod
 
 ### Game Logic
 The game logic implemented closely follows that of the classic snake game. That is to say, if the head of the tail runs into any part of the tail or the game borders, the game ends. Score is accumulated and snake tail is lengthened by eating the red "fruit". Go for as long as you can!
+
+
 ## MCU Block Diagram
-![MCU BD](./assets/img/MCU_Block_Diagram.png)
+
+![MCU Block Diagram](./assets/img/MCU_Block_Diagram.png)
 
 # FPGA Design
 

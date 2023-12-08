@@ -14,6 +14,7 @@ This project was inspired by the look and feel of classic arcade-style games. We
 but thought about what could make it interesting. So, the idea of displaying it on a regular, run-of-the-mill monitor (provided it has a VGA port, a less common protocol nowadays) was enticing. So we went for it!
 
 # System Block Diagram
+
 ![Overall Block Diagram](./assets/img/overall_block_diagram.png)
 
 # Demo
