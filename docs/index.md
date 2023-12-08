@@ -21,7 +21,5 @@ but thought about what could make it interesting. So, the idea of displaying it 
 
 
 
-### About the Authors
-Diego is a senior Engineering student at HMC. He is interested in electronics and digital design, especially embedded systems. Find him on [LinkedIn](https://www.linkedin.com/in/diegoherreravicioso/)!
 
 
