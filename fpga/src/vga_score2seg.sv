@@ -32,7 +32,7 @@ always_comb
         4'h9: segment <= 7'b1110011;
         4'hA: segment <= 7'b1110111;
         4'hB: segment <= 7'b0011111;
-        4'hC: segment <= 7'b0001101;
+        4'hC: segment <= 7'b1001100;
         4'hD: segment <= 7'b0111101;
         4'hE: segment <= 7'b1001111;
         4'hF: segment <= 7'b1000111;
